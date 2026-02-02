@@ -4,18 +4,8 @@ const port = 3000; //set port
 
 //middleware for JSON parsing
 app.use(express.json());
-//serve static files from public folder
-app.use(express.static('public'));
+app.use(express.static('public')); //serve static files from public folder
 app.use(express.urlencoded({ extended: true })); //allow express to read form data
-
-// ... (code omitted) ...
-
-//starts web server on localhost:3000
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`); //confirmation in terminal
-});
-
-module.exports = app;
 
 //navigation bar
 function NavBar(title, body) {
@@ -182,6 +172,7 @@ app.get('/comment', (req, res) => {
         .card-text{
         text-align: center;
         background-color: lightblue;
+        }
     }</style>
             <div class="card mb-3" style="max-width: 540px;">
                 <div class="row g-0">
@@ -347,7 +338,7 @@ app.get('/travelList', (req, res) => {
     .card-img-top {
     height: 250px;
     object-fit: cover;
-}
+    }
     h1 {
     align-items: center;}
     </style>
@@ -508,3 +499,5 @@ app.post('/edittravel/:id', (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`); //confirmation in terminal
 });
+
+module.exports = app;
