@@ -4,7 +4,7 @@ const port = 3000; //set port
 
 //middleware for JSON parsing
 app.use(express.json());
-app.use(express.static('public')); //serve static files from public folder
+app.use('/public', express.static('public')); //serve static files from public folder
 app.use(express.urlencoded({ extended: true })); //allow express to read form data
 
 //navigation bar
@@ -26,7 +26,7 @@ function NavBar(title, body) {
     <div class="container-fluid">
     <div class="align-items-center">
     <a class="navbar-brand"><b>Kaelynn Fong</b></a>
-    <img src="/kaepic.png" alt="Pic" style="width:40px;" class="rounded-pill">
+    <img src="/public/kaepic.png" alt="Pic" style="width:40px;" class="rounded-pill">
     </div>
     <ul class="navbar-nav">   
         <li class="nav-item">
@@ -98,7 +98,7 @@ app.get('/', (req, res) => {
     ${NavBar("Home",
             `<style>
         h1, h4 {font-family: 'arial'; text-center;}
-        .homepage {background-image: url(homepage.jpg); background-size: contain; height: 100vh;}
+        .homepage {background-image: url(/public/homepage.jpg); background-size: contain; height: 100vh;}
         </style>
         <div class="homepage d-flex justify-content-center align-items-center">
         <div class="card">
@@ -122,7 +122,7 @@ app.get('/about', (req, res) => {
     }
     .aboutpage{
     margin-top: 50px;
-    background-image: url(aboutpage.jpg);
+    background-image: url(/public/aboutpage.jpg);
     height: 100vh;
     }
     </style>
@@ -148,7 +148,7 @@ app.get('/contact', (req, res) => {
     }
     .contactpage{
     margin-top: 50px;
-    background-image: url(contactpage.jpg);
+    background-image: url(/public/contactpage.jpg);
     height: 100%;
     }
     </style>
@@ -268,10 +268,10 @@ app.post('/addcomments/:id', (req, res) => {
 
 //shows travel entries on page
 let travelList = [
-    { id: 1, title: 'Japan', area: "Osaka, Kyoto, Nara, Kobe", year: '2024', with: "Friends", description: "This was the first time I went to Japan, or any other country without my parents or an adult. I loved it! <br><br>I was on a mission to find pokemon manhole lids (pokelids).", image: "/japanday1.jpg", comment: "" },
-    { id: 2, title: 'Korea', area: "Seoul, Nami Island", year: '2024', with: "Family", description: "I went to Korea for the second time with my parents. <br><br>The first time I saw snow and tried skiing.", image: "/koreaday1.jpg", comment: "" },
-    { id: 3, title: 'Malaysia ', area: "Genting Highlands, Johor Bahru", year: '2025', with: "Friends", description: "I went to Genting Skyworld for the first time, after looking at it from afar since young.", image: "/genting.jpg", comment: "" },
-    { id: 4, title: 'Bangkok', area: "Bangkok", year: '2025', with: "Friends", description: "I went to Bangkok for the first time with my friends. It was a fun trip! <br><br>I got food poisoning from oysters though..", image: "/bkk1.jpg", comment: "" },
+    { id: 1, title: 'Japan', area: "Osaka, Kyoto, Nara, Kobe", year: '2024', with: "Friends", description: "This was the first time I went to Japan, or any other country without my parents or an adult. I loved it! <br><br>I was on a mission to find pokemon manhole lids (pokelids).", image: "/public/japanday1.jpg", comment: "" },
+    { id: 2, title: 'Korea', area: "Seoul, Nami Island", year: '2024', with: "Family", description: "I went to Korea for the second time with my parents. <br><br>The first time I saw snow and tried skiing.", image: "/public/koreaday1.jpg", comment: "" },
+    { id: 3, title: 'Malaysia ', area: "Genting Highlands, Johor Bahru", year: '2025', with: "Friends", description: "I went to Genting Skyworld for the first time, after looking at it from afar since young.", image: "/public/genting.jpg", comment: "" },
+    { id: 4, title: 'Bangkok', area: "Bangkok", year: '2025', with: "Friends", description: "I went to Bangkok for the first time with my friends. It was a fun trip! <br><br>I got food poisoning from oysters though..", image: "/public/bkk1.jpg", comment: "" },
 ];
 
 //id counter
