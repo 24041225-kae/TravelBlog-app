@@ -4,11 +4,21 @@ const port = 3000; //set port
 
 //middleware for JSON parsing
 app.use(express.json());
-app.use(express.static('images')); //serve static files from images folder
+//serve static files from public folder
+app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true })); //allow express to read form data
 
+// ... (code omitted) ...
+
+//starts web server on localhost:3000
+app.listen(port, () => {
+    console.log(`Server is running at http://localhost:${port}`); //confirmation in terminal
+});
+
+module.exports = app;
+
 //navigation bar
-function NavBar(title, body){
+function NavBar(title, body) {
     const serverTime = new Date().toLocaleString(); //get server time, CHATGPT
     return `
 <!doctype html>
@@ -65,18 +75,18 @@ ${body}</body>
 
 //search route
 app.get('/search', (req, res) => {
-const searchs = (req.query.a || '').toLowerCase(); //converts search termto lowercase, if nothing is entered then defaults to ''
-const foundTravel = travelList.find(travel => travel.title.toLowerCase().includes(searchs)); //searches travel list and converts to lowercase
+    const searchs = (req.query.a || '').toLowerCase(); //converts search termto lowercase, if nothing is entered then defaults to ''
+    const foundTravel = travelList.find(travel => travel.title.toLowerCase().includes(searchs)); //searches travel list and converts to lowercase
 
-// Redirect to matching route if keyword matches one that exists
-if (searchs === 'home') return res.redirect('/'); //redirects to home
-if (searchs === 'about') return res.redirect('/about'); //redirects to about
-if (searchs === 'contact') return res.redirect('/contact'); //redirects to contact
-if (searchs === 'travels' || searchs === 'travel') return res.redirect('/travelList'); //redirects to travel
-if (searchs === 'addtravel' || searchs === 'add')return res.redirect('/addtravel'); //redirects to addtravel
-if (foundTravel) return res.redirect('/travelList'); //redirects to travel if any keyword is found
+    // Redirect to matching route if keyword matches one that exists
+    if (searchs === 'home') return res.redirect('/'); //redirects to home
+    if (searchs === 'about') return res.redirect('/about'); //redirects to about
+    if (searchs === 'contact') return res.redirect('/contact'); //redirects to contact
+    if (searchs === 'travels' || searchs === 'travel') return res.redirect('/travelList'); //redirects to travel
+    if (searchs === 'addtravel' || searchs === 'add') return res.redirect('/addtravel'); //redirects to addtravel
+    if (foundTravel) return res.redirect('/travelList'); //redirects to travel if any keyword is found
 
-res.send(`<h1>No page found for "${searchs}"</h1><a href="/">Back to Home</a>`);
+    res.send(`<h1>No page found for "${searchs}"</h1><a href="/">Back to Home</a>`);
 
 });     //redirects to home page if nothing is found
 
@@ -84,7 +94,7 @@ res.send(`<h1>No page found for "${searchs}"</h1><a href="/">Back to Home</a>`);
 //home route
 app.get('/', (req, res) => {
     res.send( //css styling
-    `
+        `
     <style>
     h1 {text-align: center;
     font-family: 'arial';
@@ -96,7 +106,7 @@ app.get('/', (req, res) => {
     }
     </style> 
     ${NavBar("Home",
-        `<style>
+            `<style>
         h1, h4 {font-family: 'arial'; text-center;}
         .homepage {background-image: url(homepage.jpg); background-size: contain; height: 100vh;}
         </style>
@@ -107,14 +117,14 @@ app.get('/', (req, res) => {
 </div></div>
         <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/51v7yO07BdGgP6hv0OaDe2?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
         `)}
-    ` 
+    `
     );
 });
 
 //about route
 app.get('/about', (req, res) => {
     res.send(
-    `
+        `
     ${NavBar('About', `
     <style>
     .card{width: 500px;
@@ -137,9 +147,9 @@ app.get('/about', (req, res) => {
 });
 
 //contact route, with mailto email link
-app.get('/contact', (req, res) =>{
+app.get('/contact', (req, res) => {
     res.send(
-    `
+        `
     ${NavBar('Contact', `
     <style>
     .card{width: 500px;
@@ -164,7 +174,7 @@ app.get('/contact', (req, res) =>{
 let allcomments = []; //array to store "all" comments
 let allcomments2 = {}; //array to store comments for each travel
 //comment route
-app.get('/comment', (req, res) =>{
+app.get('/comment', (req, res) => {
     let comments = ''; //variable to store comments
     for (let i = 0; i < allcomments.length; i++) { //generates bootstrap cards
         comments += `
@@ -205,7 +215,7 @@ app.get('/comment', (req, res) =>{
 
 app.post('/comment', (req, res) => {
     let comment = req.body.comment;
-    if (comment){
+    if (comment) {
         allcomments.push(comment)
     }
     res.redirect('/comment')
@@ -253,13 +263,13 @@ app.get('/addcomments/:id', (req, res) => {
             <a href="/viewtravel/${travelId}" class="d-flex btn btn-outline-secondary" style="color:black; text-align: center; justify-content: center;">Back to Travel List</a></div>
             `)}
             `);
-});  
+});
 
 app.post('/addcomments/:id', (req, res) => {
     const travelId = parseInt(req.params.id);
     let addcomment = req.body.addcomment;
 
-    if (addcomment.trim()!== ""){
+    if (addcomment.trim() !== "") {
         allcomments2[travelId].push(addcomment)
     }
     res.redirect(`/addcomments/${travelId}`)
@@ -267,10 +277,10 @@ app.post('/addcomments/:id', (req, res) => {
 
 //shows travel entries on page
 let travelList = [
-    { id: 1, title: 'Japan', area: "Osaka, Kyoto, Nara, Kobe", year : '2024', with: "Friends", description: "This was the first time I went to Japan, or any other country without my parents or an adult. I loved it! <br><br>I was on a mission to find pokemon manhole lids (pokelids).", image: "/japanday1.jpg", comment: ""},
-    { id: 2, title: 'Korea', area: "Seoul, Nami Island", year : '2024', with: "Family", description: "I went to Korea for the second time with my parents. <br><br>The first time I saw snow and tried skiing.",image: "/koreaday1.jpg", comment: ""},
-    { id: 3, title: 'Malaysia ', area: "Genting Highlands, Johor Bahru", year: '2025', with: "Friends", description: "I went to Genting Skyworld for the first time, after looking at it from afar since young.",image: "/genting.jpg", comment: ""},
-    { id: 4, title: 'Bangkok', area: "Bangkok", year: '2025', with: "Friends", description: "I went to Bangkok for the first time with my friends. It was a fun trip! <br><br>I got food poisoning from oysters though..",image: "/bkk1.jpg", comment: ""},
+    { id: 1, title: 'Japan', area: "Osaka, Kyoto, Nara, Kobe", year: '2024', with: "Friends", description: "This was the first time I went to Japan, or any other country without my parents or an adult. I loved it! <br><br>I was on a mission to find pokemon manhole lids (pokelids).", image: "/japanday1.jpg", comment: "" },
+    { id: 2, title: 'Korea', area: "Seoul, Nami Island", year: '2024', with: "Family", description: "I went to Korea for the second time with my parents. <br><br>The first time I saw snow and tried skiing.", image: "/koreaday1.jpg", comment: "" },
+    { id: 3, title: 'Malaysia ', area: "Genting Highlands, Johor Bahru", year: '2025', with: "Friends", description: "I went to Genting Skyworld for the first time, after looking at it from afar since young.", image: "/genting.jpg", comment: "" },
+    { id: 4, title: 'Bangkok', area: "Bangkok", year: '2025', with: "Friends", description: "I went to Bangkok for the first time with my friends. It was a fun trip! <br><br>I got food poisoning from oysters though..", image: "/bkk1.jpg", comment: "" },
 ];
 
 //id counter
@@ -283,11 +293,11 @@ for (let i = 0; i < travelList.length; i++) {
 
 //travel list
 app.get('/travelList', (req, res) => {
-//generates booststrap cards for each entry
+    //generates booststrap cards for each entry
     let list = '';
     for (let i = 0; i < travelList.length; i++) {
-        list += 
-        `
+        list +=
+            `
         <style>
         .card-img-top {
         height: 250px;
@@ -320,8 +330,8 @@ app.get('/travelList', (req, res) => {
         </div></div></div></div></div><br><br>
         `;
     } //edit, delete, view
-//separated from the rest, add button is here
-list += `
+    //separated from the rest, add button is here
+    list += `
 
 <div class="d-grid gap-2">
     <h4>Add new Travel</h4>
@@ -351,16 +361,16 @@ list += `
 
 //view details route
 app.get('/viewtravel/:id', (req, res) => {
-    const id = parseInt(req.params.id);    
+    const id = parseInt(req.params.id);
     const travel = travelList.find(travel => travel.id === id);
-    
+
     //if not found, shows this error
-    if (!travel){
-return res.send(`<p>Travel journey not found. </p><a href="/travelList">Back to Travel List</a>`);
-}
+    if (!travel) {
+        return res.send(`<p>Travel journey not found. </p><a href="/travelList">Back to Travel List</a>`);
+    }
     let commentsA = ''; //stores html for comments
-    if (allcomments2[id] && allcomments2[id].length > 0){ //check if there are any comments, and the comment list is not empty
-        for (let i = 0; i < allcomments2[id].length; i++){ //loop through allcomments2 for this travel id
+    if (allcomments2[id] && allcomments2[id].length > 0) { //check if there are any comments, and the comment list is not empty
+        for (let i = 0; i < allcomments2[id].length; i++) { //loop through allcomments2 for this travel id
             commentsA += `
             <div class="card mb-3" style="max-width: 540px;">
                 <div class="card-body">
@@ -368,7 +378,7 @@ return res.send(`<p>Travel journey not found. </p><a href="/travelList">Back to 
                         </div>
                     </div>`;
         }
-    }else{
+    } else {
         commentsA = 'No comments yet';
     }
 
@@ -396,7 +406,7 @@ return res.send(`<p>Travel journey not found. </p><a href="/travelList">Back to 
 app.get('/addtravel', (req, res) => {
     //form for user to add details for a new trip
     res.send( //image field has file input, but does not work due to no file handling/database
-    `${NavBar('Add Travel', `
+        `${NavBar('Add Travel', `
     <h1 style="font-family: 'arial'; font-size: 40px; text-align: center;">Add a travel country</h1>
     <div class="card h-100" style="text-align: center; font-family: 'arial';>
         <div class="card-body">
@@ -445,12 +455,12 @@ app.get('/edittravel/:id', (req, res) => {
     const travel = travelList.find(travel => travel.id === id); //looks through travelList for the id, stores that object in the variable travel
 
     //if route not found, shows this error
-    if (!travel){
-    return res.send(`<p>Travel journey not found. </p><a href="/travelList">Back to Travel List</a>`); 
-}
+    if (!travel) {
+        return res.send(`<p>Travel journey not found. </p><a href="/travelList">Back to Travel List</a>`);
+    }
     //pre-filled form for user to edit details
     res.send(//image field has file input, but does not work due to no file handling/database  
-    `${NavBar("Edit Travel",`
+        `${NavBar("Edit Travel", `
     <h1 style="font-family: 'arial'; font-size: 40px">Edit Travel</h1>
     <div class="card h-100" style="text-align: center; font-family: 'arial';>
         <div class="card-body">
@@ -473,7 +483,7 @@ app.get('/edittravel/:id', (req, res) => {
 //edit travel POST route
 app.post('/edittravel/:id', (req, res) => {
     const id = parseInt(req.params.id); //id from url
-    const {title, image} = req.body;
+    const { title, image } = req.body;
 
 
     for (let i = 0; i < travelList.length; i++) {
@@ -483,13 +493,14 @@ app.post('/edittravel/:id', (req, res) => {
             travelList[i].year = req.body.year;
             travelList[i].with = req.body.with;
             travelList[i].description = req.body.description;
-        
+
             //only updates image if there is one
-        if (image) {
+            if (image) {
                 travelList[i].image = image;
             }
             break;
-    }}
+        }
+    }
     res.redirect('/travelList');
 })
 
