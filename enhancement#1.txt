@@ -1,0 +1,12 @@
+- Moved HTML layout into a NavBar function for easy reusability.
+- Individual routes for about and contact pages.
+- Used bootstrap for layout and styling.
+- Centered content vertically for readability.
+- Used background images to make the home and about page more engaging.
+- Added "view travel details" with a separate card for each trip.
+- Used 'express.static' to access public folders so I can add images to my website.
+- Let users input external URL images when adding travel entries, so a database is not necessary.
+- Added 'required' attributes to form fields for basic form validation.
+- Added a search bar for easy access to routes.
+- Allow users to post comments in separate travel entries, add comments from the travel list. Comments are stored in array and posted to user after the button is clicked.
+- Added comment section as a separate route, allow users to post general comments separate from the travel entry comments.
